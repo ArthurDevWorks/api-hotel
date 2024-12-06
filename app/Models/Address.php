@@ -14,6 +14,7 @@ class Address extends Model
 
   protected $fillable = [
     'guest_id',
+    'zipcode',
     'city',
     'state',
     'street',
