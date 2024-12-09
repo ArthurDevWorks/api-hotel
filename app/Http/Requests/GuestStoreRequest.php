@@ -25,7 +25,7 @@ class GuestStoreRequest extends FormRequest
     {
         return [
             'email'=>['required','email',Rule::unique('users')->ignore(auth()->user()->id)],
-            'password'=>['required|min:5|max:25|password|confirmed',Password::min(8)->letters()->numbers()->uncompromised()],
+            'password' => ['required', 'min:8', 'max:25', 'confirmed', Password::min(8)->letters()->numbers()->uncompromised()],
             'name' => 'required|string|min:3|max:255',
             'birthdate'=> 'required|date|before:now',
             'is_foreigner'=>'required|boolean',
