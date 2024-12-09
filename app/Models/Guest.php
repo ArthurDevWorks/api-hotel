@@ -26,7 +26,8 @@ class Guest extends Model
     public function user():BelongsTo{
         return $this->belongsTo(User::class);
     }
-    public function addresses():HasMany{
+    public function addresses(): HasMany
+    {
         return $this->hasMany(Address::class);
     }
 

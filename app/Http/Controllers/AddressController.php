@@ -39,24 +39,18 @@ class AddressController extends Controller
      */
     public function store(AddressStoreRequest $request)
     {
+        //Inicia a transaçao
         $address = DB::transaction(function () use ($request) {
 
+            //Cria o endereço
+            $address = Address::create($request->validated());
 
-            $guest = Guest::find($request->guest_id);
+            //Associa o endereco ao guest
+            $address->guest()->create($request->validated());
 
-            // Verifica se o guest foi encontrado
-            if (!$guest) {
-                throw new \Exception('Guest not found'); // Caso o guest não exista, lance uma exceção
-            }
-
-            // Criação do endereço associado ao guest
-            $address = $guest->addresses()->create($request->validated());
-
-            // Retorna o guest com o endereço carregado
+            //Carrega o relacionamento
             return $address->load('guest');
         });
-
-        // Retorna o endereço criado
         return $address;
     }
 

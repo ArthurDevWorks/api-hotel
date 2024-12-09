@@ -22,7 +22,14 @@ class AddressStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'zipcode' => 'required'
+            'guest_id' => 'required',
+            'zipcode' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'street'=> 'required',
+            'district'=> 'required',
+            'number'=> 'required',
+            'complement'=> 'required'
         ];
     }
 }
