@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddressStoreRequest;
+use App\Http\Requests\AddressUpdateRequest;
 use App\Models\Address;
 use App\Models\Guest;
 use Illuminate\Http\Request;
@@ -50,7 +51,6 @@ class AddressController extends Controller
                 throw new \Exception('Guest not found');
             }
 
-            //Cria o endereço
             //cria um endereco associado ao guest logado
             $address = $guest->addresses()->create($request->validated());
 
@@ -60,21 +60,38 @@ class AddressController extends Controller
         return $address;
     }
 
-
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    //Passa o id do endereco por parametro para ser buscado
+    public function show(Address $address)
     {
-        //
+        return $address->load(['guest']);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(AddressUpdateRequest $request, Address $address)
     {
-        //
+       //Inicia a transaçao
+        $address = DB::transaction(function () use ($request) {
+
+            //Pega o guest logado
+            $guest = auth()->user()->guest;
+
+            //Verifica se encontrou
+            if(!$guest){
+                throw new \Exception('Guest not found');
+            }
+
+            //cria um endereco associado ao guest logado
+            $address = $guest->addresses()->update($request->validated());
+
+            //Carrega o relacionamento
+            return $address->load('guest');
+        });
+        return $address;
     }
 
     /**
@@ -82,6 +99,6 @@ class AddressController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        
     }
 }
