@@ -42,11 +42,17 @@ class AddressController extends Controller
         //Inicia a transaçao
         $address = DB::transaction(function () use ($request) {
 
-            //Cria o endereço
-            $address = Address::create($request->validated());
+            //Pega o guest logado
+            $guest = auth()->user()->guest;
 
-            //Associa o endereco ao guest
-            $address->guest()->create($request->validated());
+            //Verifica se encontrou
+            if(!$guest){
+                throw new \Exception('Guest not found');
+            }
+
+            //Cria o endereço
+            //cria um endereco associado ao guest logado
+            $address = $guest->addresses()->create($request->validated());
 
             //Carrega o relacionamento
             return $address->load('guest');
