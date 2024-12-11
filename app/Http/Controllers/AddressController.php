@@ -75,18 +75,9 @@ class AddressController extends Controller
     public function update(AddressUpdateRequest $request, Address $address)
     {
        //Inicia a transaçao
-        $address = DB::transaction(function () use ($request) {
+        $address = DB::transaction(function () use ($request, $address) {
 
-            //Pega o guest logado
-            $guest = auth()->user()->guest;
-
-            //Verifica se encontrou
-            if(!$guest){
-                throw new \Exception('Guest not found');
-            }
-
-            //cria um endereco associado ao guest logado
-            $address = $guest->addresses()->update($request->validated());
+            $address->update($request->validated());
 
             //Carrega o relacionamento
             return $address->load('guest');
@@ -99,6 +90,21 @@ class AddressController extends Controller
      */
     public function destroy(string $id)
     {
-        
+        $user = auth()->user();
+
+        // Busca o endereço pelo ID e verifica se pertence ao guest do usuário logado
+        $address = Address::where('id', $id)->whereHas('guest', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->first();
+
+        // Se o endereço não for encontrado ou não pertencer ao usuário logado, retorna 403
+        if (!$address) {
+            return response()->json(['error' => 'Você não tem permissão para excluir este endereço.'], 403);
+        }
+
+        // Exclui o endereço
+        $address->delete();
+
+        return response()->noContent(); // 204 No Content em caso de sucesso
     }
 }
