@@ -12,5 +12,5 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::apiResource('guests',GuestController::class)
     ->middleware(['auth:sanctum']);
 
-Route::apiResource('addresses', AddressController::class)
+Route::apiResource('guests.addresses', AddressController::class)
     ->middleware(['auth:sanctum']);
