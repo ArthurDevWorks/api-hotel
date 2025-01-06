@@ -14,7 +14,7 @@ class Payment extends Model
     
     protected $fillabe = [
         'reservation_id',
-        'value',
+        'total',
         'payment_date'
     ];
 
