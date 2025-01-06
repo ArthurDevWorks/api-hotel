@@ -15,9 +15,9 @@ class Reservation extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'checkin_at',
-        'checkout_at',
-        'deleted_at'
+        'checkin_date',
+        'checkout_date',
+        'deleted_date'
     ];
 
     public function guests(){
