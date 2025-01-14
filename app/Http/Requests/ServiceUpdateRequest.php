@@ -22,9 +22,9 @@ class ServiceUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['nullable','min:3'],
-            'price' => ['nullable'],
-            'description' => ['nullable']
+            'name' => 'nullable','min:3',
+            'price' => 'nullable|numeric',
+            'description' => 'nullable'
         ];
     }
 }

@@ -28,7 +28,7 @@ class Reservation extends Model
         return $this->hasMany(Payment::class);
     }
     public function services():BelongsToMany{
-        return $this->belongsToMany(Services::class);
+        return $this->belongsToMany(Service::class);
     }
     public function rooms():BelongsToMany{
         return $this->belongsToMany(Room::class);
