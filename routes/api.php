@@ -34,11 +34,9 @@ Route::post('reservations/{reservation}/guests/{guest}/updateType', [Reservation
 
 Route::apiResource('services',ServiceController::class);
 
-// //Rota para o serviço de uma reserva
-// Route::post('services/{service}/{reservations}/{reservation}/addService', [ServiceController::class, 'addService']);
+//Rota para o serviço de uma reserva
+Route::post('services/{service}/{reservations}/{reservation}/addService', [ServiceController::class, 'addService']);
 
-// //Rota para atualizar serviço de uma reserva
-// Route::post('services/{service}/{reservations}/{reservation}/updateService',
-// [ServiceController::class, 'updateService']);
-
-Route::post('services/addService/{id}', [ServiceController::class, 'addService']);
+//Rota para atualizar serviço de uma reserva
+Route::post('services/{service}/{reservations}/{reservation}/updateService',
+[ServiceController::class, 'updateService']);

@@ -121,9 +121,4 @@ class ServiceController extends Controller
             'message' => 'Não há nenhum serviço nesta reserva.',
         ], 404);
     }
-
-    //Funcao responsavel por juntar serviços a uma reserva
-    public function addService($id){
-
-    }
 }
