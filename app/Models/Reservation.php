@@ -17,12 +17,12 @@ class Reservation extends Model
     protected $fillable = [
         'checkin_date',
         'checkout_date',
-        'deleted_date'
+        'deleted_at'
     ];
 
     public function guests(){
         return $this->belongsToMany(Guest::class)
-        ->withPivot(['checkin_at','checkout_at','type']);
+        ->withPivot(['checkin_date','checkout_date','type']);
     }
     public function payments():HasMany{
         return $this->hasMany(Payment::class);
