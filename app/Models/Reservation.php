@@ -15,16 +15,15 @@ class Reservation extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'guest_id',
         'checkin_date',
         'checkout_date',
         'state_id',
-        'deleted_at'
     ];
 
     public function guests(){
-        return $this->belongsToMany(Guest::class)
-        ->withPivot(['checkin_date','checkout_date','type']);
+        return $this->belongsToMany(Guest::class, 'reservation_guest')
+        ->withPivot(['checkin_at', 'checkout_date','type'])
+        ->withTimestamps();
     }
     public function payments():HasMany{
         return $this->hasMany(Payment::class);
