@@ -28,7 +28,4 @@ class Room extends Model
     public function reservations():BelongsToMany{
         return $this->belongsToMany(Reservation::class);
     }
-    public function roomImages():HasMany{
-        return $this->hasMany(roomImage::class);
-    }
 }

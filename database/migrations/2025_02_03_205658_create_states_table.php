@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('reservations', function (Blueprint $table) {
-            $table->foreignId('state_id')->constrained('states');
+         Schema::create('states', function (Blueprint $table) {
+            $table->id();
+            $table->state();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('reservations', function (Blueprint $table) {
-            $table->drop('state_id');
-        });
+        //
     }
 };

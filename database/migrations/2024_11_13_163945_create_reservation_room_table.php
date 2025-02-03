@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('reservation_room', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('reservation_id')->constrained('reservations');
+            $table->foreignId('reservation_id')->constrained('reservations');
             $table->foreignId('room_id')->constrained('rooms');
             $table->timestamps();
         });
