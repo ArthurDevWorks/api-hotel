@@ -16,7 +16,7 @@ class ReservationController extends Controller
     public function index()
     {
         $reservations = Reservation::all();
-        return $reservations;
+        return $reservations::with('guests','state');
     }
     /**
      * Store a newly created resource in storage.
@@ -25,20 +25,28 @@ class ReservationController extends Controller
     {
         //Rollback caso der erro, + seguro
         $reservation = DB::transaction(function () use ($request) {
-            return Reservation::create($request->validated());
+            $reservation = Reservation::create($request->validated());
+
+            if($request->has('guest_ids')){
+                $reservation->guests()->attach($request->guest_ids);
+            }
+
+            return $reservation;
         });
+
         // Retornar o endereço
         return response()->json([
             'success' => true,
             'data' => $reservation
         ]);
+
     }
     /**
      * Display the specified resource.
      */
     public function show(Reservation $reservation)
     {
-        return $reservation->load(['guests']);
+        return $reservation->load(['guests','state']);
     }
     /**
      * Update the specified resource in storage.
@@ -47,6 +55,12 @@ class ReservationController extends Controller
     {
         $reservation = DB::transaction(function () use ($request, $reservation) {
             $reservation->update($request->validated());
+
+            if($request->has('guest_ids'))
+            {
+                $reservation->guests()->sync($request->guest_ids);
+            }
+
             return $reservation->load('guests');
         });
         return response()->json([
@@ -55,13 +69,17 @@ class ReservationController extends Controller
             'message' => 'Reserva atualizada com sucesso.'
         ]);
     }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Reservation $reservation)
-    {
-        $reservation->delete();
-        // Retornar resposta de sucesso
+    {   
+        DB::transaction(function () use ($reservation) {
+            $reservation->guests()->detach(); // Remover todos os hóspedes vinculados
+            $reservation->delete();
+        });
+
         return response()->json([
             'success' => true,
             'message' => 'Reserva deletada com sucesso.'
@@ -80,93 +98,5 @@ class ReservationController extends Controller
             'message' => 'Serviço adicionado à reserva com sucesso .',
             'data' => $reservation->load('services')
         ]);
-    }
-    
-    // Função para adicionar hóspedes a uma reserva
-    public function addGuest(Reservation $reservation, Guest $guest)
-    {
-        $reservation->guests()->attach($guest->id);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Hospéde adicionado realizado com sucesso.',
-            'data' => $reservation->load(['guests'])
-        ]);
-        
-    }
-
-    // Função para registrar o check-in de um hóspede
-    public function checkIn(Request $request, Reservation $reservation, Guest $guest)
-    {
-        // Validação dos dados
-        $request->validate([
-            'checkin_at' => 'required|date',
-        ]);
-        // Verifica se o hóspede está associado à reserva
-        $pivot = $reservation->guests()->where('guest_id', $guest->id)->first();
-        if ($pivot) {
-            // Atualiza o valor de checkin_at na tabela pivô
-            $reservation->guests()->updateExistingPivot($guest->id, [
-                'checkin_at' => $request->checkin_at,
-            ]);
-            return response()->json([
-                'success' => true,
-                'message' => 'Check-in realizado com sucesso.',
-            ]);
-        }
-        return response()->json([
-            'success' => false,
-            'message' => 'Hóspede não encontrado nesta reserva.',
-        ], 404);
-    }
-
-    // Função para registrar o check-out de um hóspede
-    public function checkOut(Request $request, Reservation $reservation, Guest $guest)
-    {
-        // Validação dos dados
-        $request->validate([
-            'checkout_at' => 'required|date|after:checkin_at',
-        ]);
-        // Verifica se o hóspede está associado à reserva
-        $pivot = $reservation->guests()->where('guest_id', $guest->id)->first();
-        if ($pivot) {
-            // Atualiza o valor de checkout_at na tabela pivô
-            $reservation->guests()->updateExistingPivot($guest->id, [
-                'checkout_at' => $request->checkout_at,
-            ]);
-            return response()->json([
-                'success' => true,
-                'message' => 'Check-out realizado com sucesso.',
-            ]);
-        }
-        return response()->json([
-            'success' => false,
-            'message' => 'Hóspede não encontrado nesta reserva.',
-        ], 404);
-    }
-
-    // Função para mudar o Tipo (Titular,Acompanhante) 
-    public function updateType(Request $request, Reservation $reservation, Guest $guest)
-    {
-        $request->validate([
-            'type' => 'required|in:TITULAR,ACOMPANHANTE'
-        ]);
-        // Verifica se o hóspede está associado à reserva
-        $pivot = $reservation->guests()->where('guest_id', $guest->id)->first();
-        if ($pivot) {
-            // Atualiza o valor de checkout_at na tabela pivô
-            $reservation->guests()->updateExistingPivot($guest->id, [
-                'type' => $request->type,
-            ]);
-            return response()->json([
-                'success' => true,
-                'message' => 'Tipo atualizado com sucesso.',
-                
-            ]);
-        }
-        return response()->json([
-            'success' => false,
-            'message' => 'Hóspede não encontrado nesta reserva.',
-        ], 404);
     }
 }

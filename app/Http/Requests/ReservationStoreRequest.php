@@ -18,8 +18,10 @@ class ReservationStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'checkin_date' => 'required|date',
-            'checkout_date' => 'required|date|after:checkin_date',
+            'guest_id'      => 'required',
+            'checkin_date'  => 'nullable|date',
+            'checkout_date' => 'nullable|date|after:checkin_date',
+            'state_id'      => 'required|integer'
         ];
     }
 }

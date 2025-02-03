@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('guest_id')->constrained('guests');
             $table->dateTime('checkin_at');
             $table->dateTime('checkout_at');
             $table->timestamps();

@@ -15,8 +15,10 @@ class Reservation extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
+        'guest_id',
         'checkin_date',
         'checkout_date',
+        'state_id',
         'deleted_at'
     ];
 
@@ -32,5 +34,8 @@ class Reservation extends Model
     }
     public function rooms():BelongsToMany{
         return $this->belongsToMany(Room::class);
+    }
+    public function state(){
+        return $this->belongsTo(State::class);
     }
 }
