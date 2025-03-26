@@ -2,10 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\AddressController;
-use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ReservationController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -34,4 +35,9 @@ Route::post('reservations/{reservation}/guests/{guest}/checkout', [ReservationCo
 // Rota para atualizar o tipo de um hóspede
 Route::post('reservations/{reservation}/guests/{guest}/updateType', [ReservationController::class, 'updateType']);
 
+//Rota de servicos
 Route::apiResource('services',ServiceController::class);
+
+//Rota de quartos
+Route::apiResource('rooms',RoomController::class)
+    ->middleware(['auth:sanctum']);
