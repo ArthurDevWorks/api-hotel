@@ -20,6 +20,7 @@ class Room extends Model
         'max_children',
         'double_beds',
         'single_beds',
+        'items_included',
         'floor',
         'type',
         'number',

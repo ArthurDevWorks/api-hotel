@@ -11,7 +11,7 @@ class RoomUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,17 @@ class RoomUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'          => 'required|min:3',
+            'description'   => 'nullable|string|max:255',
+            'size'          => 'required',
+            'max_adults'    => 'required|integer',
+            'max_children'  => 'required|integer',
+            'double_beds'   => 'required|integer',
+            'single_beds'   => 'required|integer',
+            'floor'         => 'required|integer',
+            'type'          => 'required',
+            'number'        => 'required',
+            'price'         => 'required|numeric|min:0'
         ];
     }
 }

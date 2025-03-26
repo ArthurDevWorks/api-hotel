@@ -12,9 +12,11 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Room $room)
     {
-        //
+        $room = Room::paginate(20);
+
+        return $room;
     }
 
     /**
@@ -33,14 +35,6 @@ class RoomController extends Controller
             'data'   => $room
         ]);
 
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**

@@ -23,7 +23,7 @@ class RoomStoreRequest extends FormRequest
     {
         return [
             'name'          => 'required|min:3',
-            'description'   => '',
+            'description'   => 'nullable|string|max:255',
             'size'          => 'required',
             'max_adults'    => 'required|integer',
             'max_children'  => 'required|integer',
@@ -32,7 +32,7 @@ class RoomStoreRequest extends FormRequest
             'floor'         => 'required|integer',
             'type'          => 'required',
             'number'        => 'required',
-            'price'         => 'required'
+            'price'         => 'required|numeric|min:0'
         ];
     }
 }
