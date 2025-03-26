@@ -65,8 +65,11 @@ class AddressController extends Controller
     public function update(AddressUpdateRequest $request, Guest $guest, Address $address)
     {
         if($address->guest_id != $guest->id){
-            return response()->json(['error' => 'Voce nao tem permissao para atualizar este endereco.']);
+            return response()->json([
+                'error' => 'Voce nao tem permissao para atualizar este endereco.'
+            ]);
         }
+
        //Inicia a transaçao
         $address = DB::transaction(function () use ($request, $address) {
             $address->update($request->validated());

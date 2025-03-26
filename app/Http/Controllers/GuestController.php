@@ -16,7 +16,6 @@ class GuestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    //GET
     public function index(Request $request)
     {
         $guests = Guest::query();
@@ -35,8 +34,6 @@ class GuestController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    
-    //CREATE
     public function store(GuestStoreRequest $request)
     {
         //Inicia a transaçao
@@ -57,7 +54,6 @@ class GuestController extends Controller
     /**
      * Display the specified resource.
      */
-    //READ
     public function show(Guest $guest)
     {
         return $guest->load(['user','addresses']);
@@ -66,7 +62,6 @@ class GuestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    //UPDATE
     public function update(GuestUpdateRequest $request, Guest $guest)
     {
         $guest = DB::transaction(function () use ($request, $guest) {
@@ -80,8 +75,7 @@ class GuestController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     */
-    //DELETE
+    */
     public function destroy(string $id)
     {
         $user = auth()->user();
